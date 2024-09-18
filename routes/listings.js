@@ -7,7 +7,6 @@ const store = require("../store/listings");
 const categoriesStore = require("../store/categories");
 const validateWith = require("../middleware/validation");
 const auth = require("../middleware/auth");
-const imageResize = require("../middleware/imageResize");
 const delay = require("../middleware/delay");
 const listingMapper = require("../mappers/listings");
 const config = require("config");
@@ -55,7 +54,6 @@ router.post(
     upload.array("images", config.get("maxImageCount")),
     validateWith(schema),
     validateCategoryId,
-    imageResize,
   ],
 
   async (req, res) => {

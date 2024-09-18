@@ -1,22 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const Joi = require("joi");
+const { Builder, Browser, By } = require("selenium-webdriver");
 
 const usersStore = require("../store/users");
 const auth = require("../middleware/auth");
 const validateWith = require("../middleware/validation");
+const { sendPushNotification } = require("../utilities/pushNotifications");
+const moment = require("moment");
+const { fromPairs } = require("lodash");
+const { prayerTimes } = require("..");
 
-router.post(
-  "/",
-  [auth, validateWith({ token: Joi.string().required() })],
-  (req, res) => {
-    const user = usersStore.getUserById(req.user.userId);
-    if (!user) return res.status(400).send({ error: "Invalid user." });
+// const token = "ExponentPushToken[ylX1aGJdCrQM0ibOOCESTK]";
 
-    user.expoPushToken = req.body.token;
-    console.log("User registered for notifications: ", user);
-    res.status(201).send();
-  }
-);
+router.post("/", async (req, res) => {
+  const token = req.body.token;
+  console.log("Token: " + token);
+  // await sendPushNotification(token, "There's only one God");
+  res.status(201).send();
+});
 
 module.exports = router;
