@@ -17,8 +17,11 @@ export const getPrayerTimes = async () => {
   const newTimes = times.map((val: string) => {
     const [name, time] = val.split(" ");
     const [hours, minutes] = time.split(":");
-    console.log(name, time, hours);
-    if (name !== "FAJR") {
+    if (
+      name !== "FAJR" ||
+      //@ts-ignore
+      (name === "ZUHR" && +hours < 12)
+    ) {
       return [
         name,
         moment()

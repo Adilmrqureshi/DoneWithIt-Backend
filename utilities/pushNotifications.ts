@@ -1,11 +1,14 @@
+import { Moment } from "moment";
+
 const { Expo } = require("expo-server-sdk");
 
 const sendPushNotification = async (
   targetExpoPushToken: string,
-  body: string
+  body: string,
+  data?: Record<string, Moment>
 ) => {
   const expo = new Expo();
-  const message = { to: targetExpoPushToken, sound: "default", body };
+  const message = { to: targetExpoPushToken, sound: "default", body, data };
   try {
     const tickets = await expo.sendPushNotificationsAsync([message]);
     console.log("Tickets", tickets);

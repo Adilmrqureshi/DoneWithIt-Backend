@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment, { Moment } from "moment";
 const { getPrayerTimes } = require("./utilities/getPrayerTimes");
 const { sendPushNotification } = require("./utilities/pushNotifications");
 
@@ -37,9 +37,15 @@ app.use("/api/messages", messages);
 const token = "ExponentPushToken[ylX1aGJdCrQM0ibOOCESTK]";
 
 const port = process.env.PORT || config.get("port");
+
+async function salahTimes(token: string, data: Record<string, Moment>) {
+  await sendPushNotification(token, "Salah times for the day", prayerTimes);
+}
+
 app.listen(port, async function () {
   let sent = false;
   prayerTimes = await getPrayerTimes();
+  await salahTimes(token, prayerTimes);
   while (true) {
     const now = moment();
     if (now.millisecond() === 0) {
@@ -53,6 +59,7 @@ app.listen(port, async function () {
             new Date().toLocaleString()
         );
         prayerTimes = await getPrayerTimes();
+        await salahTimes(token, prayerTimes);
       }
 
       const currentKey = Object.keys(prayerTimes).find((key) =>
@@ -61,6 +68,8 @@ app.listen(port, async function () {
 
       if (currentKey) {
         const currentPrayerTime = moment(prayerTimes[currentKey]);
+        const now2 = moment();
+        now2.minute(28);
         console.log(
           "[+] Current prayer time is " +
             currentKey +
@@ -68,10 +77,7 @@ app.listen(port, async function () {
             currentPrayerTime.toLocaleString()
         );
 
-        if (
-          currentPrayerTime.subtract(15, "minutes").isSame(now) ||
-          now.minute() === 5
-        ) {
+        if (currentPrayerTime.subtract(15, "minutes").isSame(now, "minute")) {
           if (sent === false) {
             console.log("[+] Sending notication");
             await sendPushNotification(
