@@ -34,7 +34,7 @@ app.use("/api/my", my);
 app.use("/api/expoPushTokens", expoPushTokens);
 app.use("/api/messages", messages);
 
-const token = "ExponentPushToken[ylX1aGJdCrQM0ibOOCESTK]";
+const token = "ExponentPushToken[rCbBBOP93wI4x5yNXPEGum]";
 
 const port = process.env.PORT || config.get("port");
 
@@ -53,7 +53,7 @@ app.listen(port, async function () {
 
       // If a new day has started then get the prayer times for the day
       // 'sent' flag to prevent race conditions
-      if (now.hour() === 0) {
+      if (now.hour() === 0 && now.millisecond() < 5) {
         console.log(
           "[+] Setting the prayer times from the new day: " +
             new Date().toLocaleString()
@@ -68,8 +68,6 @@ app.listen(port, async function () {
 
       if (currentKey) {
         const currentPrayerTime = moment(prayerTimes[currentKey]);
-        const now2 = moment();
-        now2.minute(28);
         console.log(
           "[+] Current prayer time is " +
             currentKey +
