@@ -33,7 +33,8 @@ const port = process.env.PORT || config.get("port");
 let prayerTimes: Record<string, Moment> = {};
 
 app.listen(
-  port
+  "3000",
+  () => console.log("Application started at port 3000")
   //     async () => {
   //   let sent = false;
   //   prayerTimes = await getPrayerTimes();
