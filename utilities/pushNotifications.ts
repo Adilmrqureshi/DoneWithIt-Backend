@@ -1,14 +1,23 @@
 import { Moment } from "moment";
 
-const { Expo } = require("expo-server-sdk");
+import { Expo } from "expo-server-sdk";
 
-const sendPushNotification = async (
+export async function salahTimes(token: string, data: Record<string, Moment>) {
+  await sendPushNotification(token, "Salah times for the day", data);
+}
+
+export const sendPushNotification = async (
   targetExpoPushToken: string,
   body: string,
   data?: Record<string, Moment>
 ) => {
   const expo = new Expo();
-  const message = { to: targetExpoPushToken, sound: "default", body, data };
+  const message = {
+    to: targetExpoPushToken,
+    sound: "default" as const,
+    body,
+    data,
+  };
   try {
     const tickets = await expo.sendPushNotificationsAsync([message]);
     console.log("Tickets", tickets);
@@ -16,5 +25,3 @@ const sendPushNotification = async (
     console.log("Error sending chunk", error);
   }
 };
-
-module.exports = { sendPushNotification };
